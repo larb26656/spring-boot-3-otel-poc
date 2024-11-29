@@ -22,20 +22,6 @@ public class ProductController {
 
     @GetMapping("/products/{productId}")
     public Product getProduct(@PathVariable Long productId, HttpServletRequest request) {
-        // Log header
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            String headerValue = request.getHeader(headerName);
-            LOGGER.info("Header: {} = {}", headerName, headerValue);
-        }
-
-//        Span currentSpan = Span.current();
-//        String traceId = currentSpan.getSpanContext().getTraceId();
-//        String spanId = currentSpan.getSpanContext().getSpanId();
-//        LOGGER.info("Current trace ID: {}", traceId);
-//        LOGGER.info("Current span ID: {}", spanId);
-
         LOGGER.info("Getting product {}", productId);
         return productService.getProduct(productId);
     }

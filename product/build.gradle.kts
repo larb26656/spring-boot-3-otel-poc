@@ -37,6 +37,9 @@ dependencies {
 	// For use create span annotation
 	implementation("org.springframework.boot:spring-boot-starter-aop")
 
+
+	runtimeOnly("com.github.loki4j:loki-logback-appender:1.4.1")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

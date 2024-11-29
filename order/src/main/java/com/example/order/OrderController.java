@@ -19,7 +19,6 @@ public class OrderController {
     @GetMapping("/orders/{orderId}")
     public Order getOrder(@PathVariable Long orderId) {
         LOGGER.info("Getting Order {}", orderId);
-        LOGGER.info("Getting Order2 {}", orderId);
         return orderService.getOrder(orderId);
     }
 }

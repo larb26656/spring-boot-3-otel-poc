@@ -1,4 +1,21 @@
 services:
+  product:
+    build: ./product
+    ports:
+      - "8010:8010"
+    environment:
+      - OTLP_METRICS_EXPORT_URL=http://prometheus:9090/api/v1/otlp/v1/metrics
+      - OTLP_TRACING_EXPORT_URL=http://tempo:4318/v1/traces
+      - LOGBACK_LOKI_ENDPOINT=http://loki:3100/loki/api/v1/push
+  order:
+    build: ./order
+    ports:
+      - "8011:8011"
+    environment:
+      - OTLP_METRICS_EXPORT_URL=http://prometheus:9090/api/v1/otlp/v1/metrics
+      - OTLP_TRACING_EXPORT_URL=http://tempo:4318/v1/traces
+      - LOGBACK_LOKI_ENDPOINT=http://loki:3100/loki/api/v1/push
+      - MICROSERVICE_PRODUCT_ORIGIN=http://product:8010
   prometheus:
     image: prom/prometheus:v2.54.1 # https://hub.docker.com/r/prom/prometheus
     extra_hosts: ["host.docker.internal:host-gateway"]
@@ -8,7 +25,6 @@ services:
       - --web.enable-remote-write-receiver
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - prometheus:/prometheus
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - "9090:9090"
@@ -30,7 +46,6 @@ services:
     extra_hosts: ["host.docker.internal:host-gateway"]
     command: ["-config.file=/etc/tempo.yml"]
     volumes:
-      - tempo:/tmp/tempo
       - ./docker/grafana/tempo.yml:/etc/tempo.yml:ro
     ports:
       - "3200:3200" # tempo
@@ -41,8 +56,3 @@ services:
     command: ["-config.file=/etc/loki/local-config.yaml"]
     ports:
       - "3100:3100"
-volumes:
-  prometheus:
-    driver: local
-  tempo:
-    driver: local
